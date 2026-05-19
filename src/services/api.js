@@ -1,4 +1,4 @@
-const url = "https://fakestoreapi.com/products";
+const url = "https://fakestoreapi.com";
 
 export const request = async (endpoint) => {
   try {
