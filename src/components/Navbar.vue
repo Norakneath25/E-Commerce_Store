@@ -1,7 +1,10 @@
 <template>
 
   <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-    <nav class="mx-auto flex w-full items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+    <div class="w-full bg-indigo-600 h-10 flex items-center justify-center px-7 sm:px-6 lg:px-8">
+        <h4 class="text-white text-sm font-medium italic">Get Free Shipping on Orders Over $50</h4>
+    </div>
+    <nav class="flex w-full items-center justify-between px-7 py-3 sm:px-6 lg:px-8">
 
       <!-- Logo -->
       <RouterLink to="/" class="flex items-center gap-3" aria-label="E-Commerce home">
@@ -31,7 +34,10 @@
 
       <!-- User Actions -->
       <div class="hidden items-center gap-2 lg:flex">
-        <button class="icon-button" type="button" aria-label="Search products">
+        <button class="icon-button" type="button" 
+        aria-label="Search products"
+        @click="toggleSearch"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor" class="h-5 w-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
           </svg>
@@ -58,7 +64,7 @@
         type="button"
         :aria-expanded="isMenuOpen"
         aria-label="Toggle navigation menu"
-        @click="isMenuOpen = !isMenuOpen"
+        @click="toggleMenu"
       >
         <svg v-if="!isMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor" class="h-6 w-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -91,15 +97,19 @@
         </div>
       </div>
     </div>
+
+   
   </header>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import logoUrl from '../assets/images/logoShop.jpg';
+  import { ref } from 'vue';
 
-const isMenuOpen = ref(false);
+const  logoUrl = 'src/assets/images/logoShop.jpg';;
 const cartCount = ref(0);
+
+const isSearchOpen = ref(false);
+const isMenuOpen = ref(false);
 
 const navItems = [
   { label: 'Home', to: '/' },
@@ -107,6 +117,15 @@ const navItems = [
   { label: 'Cart', to: '/cart' },
   { label: 'Order', to: '/order' },
 ];
+
+const toggleMenu = () =>{
+  isMenuOpen.value = !isMenuOpen.value;
+}
+const toggleSearch = () =>{
+  isSearchOpen.value = !isSearchOpen.value;
+}
+
+
 </script>
 
 <style scoped>
@@ -122,7 +141,7 @@ const navItems = [
 }
 
 .icon-button:hover {
-  background-color: rgb(241 245 249);
+  background-color: rgb(195, 195, 196);
   color: rgb(2 6 23);
 }
 
@@ -140,7 +159,7 @@ const navItems = [
 }
 
 .nav-pill:hover {
-  background-color: rgb(241 245 249);
+  background-color: rgb(171, 171, 171);
   color: rgb(2 6 23);
 }
 
