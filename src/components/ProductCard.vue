@@ -9,7 +9,9 @@ defineEmits(["add-to-cart"]);
 </script>
 
 <template>
-  <div class="bg-white rounded-xl">
+  <div
+    class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer"
+  >
     <div class="bg-gray-100 p-6">
       <img
         class="w-full h-56 object-contain transition-transform duration-300"
