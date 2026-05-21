@@ -63,26 +63,38 @@
       </button>
     </div>
     <!-- loading -->
-    <div v-if="productStore.isLoading" class="text-center mt-10">
-      Loading...
-    </div>
+    <div class="p-4">
+      <div
+        v-if="productStore.isLoading"
+        class="flex justify-center items-center min-h-[400px]"
+      >
+        <div>
+          <div
+            class="h-16 w-16 border-4 border-dashed rounded-full animate-spin border-blue-500"
+          ></div>
+        </div>
+      </div>
 
-    <!-- error -->
-    <div v-else-if="productStore.error" class="text-center text-red-500 mt-10">
-      {{ productStore.error }}
-    </div>
+      <!-- error -->
+      <div
+        v-else-if="productStore.error"
+        class="text-center text-red-500 mt-10"
+      >
+        {{ productStore.error }}
+      </div>
 
-    <!-- products -->
-    <div
-      v-else
-      class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4"
-    >
-      <ProductCard
-        v-for="product in productStore.products"
-        :key="product.id"
-        :product="product"
-        @add-to-cart="(product) => console.log('added:', product.title)"
-      />
+      <!-- products -->
+      <div
+        v-else
+        class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4"
+      >
+        <ProductCard
+          v-for="product in productStore.products"
+          :key="product.id"
+          :product="product"
+          @add-to-cart="(product) => console.log('added:', product.title)"
+        />
+      </div>
     </div>
   </div>
 </template>
