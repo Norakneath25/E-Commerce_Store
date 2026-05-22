@@ -66,7 +66,7 @@
     <div class="p-4">
       <div
         v-if="productStore.isLoading"
-        class="flex justify-center items-center min-h-[400px]"
+        class="flex justify-center items-center min-h-100"
       >
         <div>
           <div
@@ -92,7 +92,7 @@
           v-for="product in productStore.products"
           :key="product.id"
           :product="product"
-          @add-to-cart="(product) => console.log('added:', product.title)"
+          @add-to-cart="(product) => cartStore.addItem(product,1)"
         />
       </div>
     </div>
@@ -103,7 +103,9 @@
 import { onMounted } from "vue";
 import { useProductStore } from "../stores/productStore";
 import ProductCard from "../components/ProductCard.vue";
+import { useCartStore } from "../stores/cartStore";
 
 const productStore = useProductStore();
+const cartStore = useCartStore();
 onMounted(() => productStore.fetchAllProducts());
 </script>

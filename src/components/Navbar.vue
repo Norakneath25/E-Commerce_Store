@@ -86,9 +86,17 @@
           </svg>
 
           <span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[11px] font-bold text-white">
-            {{ cartCount }}
+            {{ cartStore.itemCount }}
           </span>
         </RouterLink>
+        <!-- MESSAGE -->
+        <transition name="fade">
+          <div
+            v-if="cartStore.showMessage"
+           class="absolute right-10 top-30 -translate-y-1/2 whitespace-nowrap rounded-lg bg-green-500 px-4 py-2 text-sm text-white shadow-lg z-50">
+            {{ cartStore.message }}
+          </div>
+        </transition>
 
         <!-- Account -->
         <button
@@ -377,8 +385,9 @@
 import { ref, computed, onMounted } from 'vue'
 import logoUrl from '@/assets/images/logoShop.jpg'
 import { request } from '@/services/api'
+import { useCartStore } from '@/stores/cartStore'
 
-const cartCount = ref(0)
+const cartStore = useCartStore()
 const isSearchOpen = ref(false)
 const isAccountOpen = ref(false)
 const isMenuOpen = ref(false)
@@ -530,4 +539,17 @@ const filteredProducts = computed(() => {
 .account-button:hover {
   background: rgb(241 245 249);
 }
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+
 </style>

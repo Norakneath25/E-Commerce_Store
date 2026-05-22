@@ -23,7 +23,7 @@ defineEmits(["add-to-cart"]);
       <span class="text-xs font-bold uppercase tracking-wide">{{
         product.category
       }}</span>
-      <h2 class="font-semibold text-gray-800 line-clamp-2 min-h-[48px]">
+      <h2 class="font-semibold text-gray-800 line-clamp-2 min-h-12">
         {{ product.title }}
       </h2>
       <div class="flex items-center gap-2">
