@@ -1,11 +1,13 @@
 <script setup>
+import { useCartStore } from "../stores/cartStore";
+
 defineProps({
   product: {
     type: Object,
     required: true,
   },
 });
-defineEmits(["add-to-cart"]);
+const cartStore = useCartStore();
 </script>
 
 <template>
@@ -13,11 +15,13 @@ defineEmits(["add-to-cart"]);
     class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer"
   >
     <div class="bg-gray-100 p-6">
-      <img
-        class="w-full h-56 object-contain transition-transform duration-300"
-        :src="product.image"
-        :alt="product.title"
-      />
+      <router-link :to="`/products/${product.id}`">
+        <img
+          class="w-full h-56 object-contain transition-transform duration-300"
+          :src="product.image"
+          :alt="product.title"
+        />
+      </router-link>
     </div>
     <div class="p-4 space-y-3">
       <span class="text-xs font-bold uppercase tracking-wide">{{
@@ -35,7 +39,7 @@ defineEmits(["add-to-cart"]);
         <p class="text-2xl font-bold text-gray-900">${{ product.price }}</p>
         <button
           class="bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-800 transition"
-          @click="$emit('add-to-cart', product)"
+          @click="cartStore.addItem(product)"
         >
           Add
         </button>
