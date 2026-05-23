@@ -1,49 +1,78 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-3xl font-bold mb-6">
-      Shopping Cart
-    </h1>
+  <div class="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
+    
+    <div class="mx-auto max-w-7xl">
 
-    <div v-if="cartStore.items.length">
-      <div class="space-y-4">
-        <CartItem
-          v-for="item in cartStore.items"
-          :key="item.product.id"
-          :item="item"
-          @remove="cartStore.removeItem"
-          @update-qty="cartStore.updateQuantity"
-        />
-      </div>
+      <!-- Title -->
+      <h1 class="mb-8 text-3xl font-bold text-gray-800 md:text-4xl">
+        Shopping Cart
+      </h1>
 
-      <div class="mt-8 border-t pt-4">
-        <h2 class="text-xl font-bold">
-          Total Items:
-          {{ cartStore.itemCount }}
-        </h2>
+      <!-- Cart Items -->
+      <div v-if="cartStore.items.length">
 
-        <h2 class="text-2xl font-bold mt-2">
-          Total:
-          ${{ cartStore.totalPrice.toFixed(2) }}
-        </h2>
+        <div class="space-y-5">
+          <CartItem
+            v-for="item in cartStore.items"
+            :key="item.product.id"
+            :item="item"
+            @remove="cartStore.removeItem"
+            @update-qty="cartStore.updateQuantity"
+          />
+        </div>
 
-        <button
-          @click="goCheckout"
-          class="bg-blue-500 text-white px-6 py-3 rounded mt-4"
+        <!-- Summary -->
+        <div
+          class="mt-10 rounded-2xl bg-white p-6 shadow-md"
         >
-          Proceed to Checkout
-        </button>
+          <div
+            class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+          >
+            <div>
+              <h2 class="text-lg font-semibold text-gray-700">
+                Total Items:
+                <span class="font-bold">
+                  {{ cartStore.itemCount }}
+                </span>
+              </h2>
+
+              <h2 class="mt-2 text-3xl font-bold text-gray-900">
+                ${{ cartStore.totalPrice.toFixed(2) }}
+              </h2>
+            </div>
+
+            <button
+              @click="goCheckout"
+              class="w-full rounded-xl bg-blue-500 px-6 py-4 text-lg font-semibold text-white transition hover:bg-blue-600 md:w-auto"
+            >
+              Proceed to Checkout
+            </button>
+          </div>
+        </div>
+
       </div>
-    </div>
 
-    <div v-else class="flex justify-center items-center flex-col text-2xl">
-      <p>Your cart is empty.</p>
-
-      <RouterLink
-        to="/products"
-        class="text-blue-500"
+      <!-- Empty Cart -->
+      <div
+        v-else
+        class="flex min-h-[60vh] flex-col items-center justify-center text-center"
       >
-        Go Shopping
-      </RouterLink>
+        <h2 class="text-2xl font-bold text-gray-700">
+          Your cart is empty
+        </h2>
+
+        <p class="mt-2 text-gray-400">
+          Looks like you haven’t added anything yet.
+        </p>
+
+        <RouterLink
+          to="/products"
+          class="mt-6 rounded-xl bg-blue-500 px-6 py-3 text-white transition hover:bg-blue-600"
+        >
+          Go Shopping
+        </RouterLink>
+      </div>
+
     </div>
   </div>
 </template>

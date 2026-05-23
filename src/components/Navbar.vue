@@ -19,12 +19,12 @@
           class="h-12 w-12 rounded-xl object-cover ring-1 ring-slate-200"
         >
 
-        <div class="leading-tight">
-          <h1 class="text-2xl font-bold text-slate-900">
+        <div class="flex flex-col leading-tight">
+          <h1 class="lg:text-lg font-bold tracking-wide text-slate-900 text-sm">
             E-Commerce
           </h1>
 
-          <p class="text-sm text-slate-500">
+          <p class="mt-0.5 lg:text-xs text-sm font-medium text-slate-500">
             Online Store
           </p>
         </div>
@@ -45,12 +45,12 @@
 
       </div>
 
-      <!-- Desktop Actions -->
-      <div class="hidden items-center gap-2 lg:flex">
+      <!-- Right Actions -->
+      <div class="flex items-center gap-2">
 
         <!-- Search -->
         <button
-          class="icon-button"
+          class="hidden lg:inline-flex icon-button"
           @click="toggleSearch"
         >
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -89,18 +89,10 @@
             {{ cartStore.itemCount }}
           </span>
         </RouterLink>
-        <!-- MESSAGE -->
-        <transition name="fade">
-          <div
-            v-if="cartStore.showMessage"
-           class="absolute right-10 top-30 -translate-y-1/2 whitespace-nowrap rounded-lg bg-green-500 px-4 py-2 text-sm text-white shadow-lg z-50">
-            {{ cartStore.message }}
-          </div>
-        </transition>
 
         <!-- Account -->
         <button
-          class="icon-button"
+          class="hidden lg:inline-flex icon-button"
           @click="toggleAccount"
         >
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -118,6 +110,7 @@
         </button>
 
       </div>
+
       <!-- Mobile Menu Button -->
       <button
         class="flex lg:hidden items-center justify-center h-11 w-11 rounded-xl text-slate-700 hover:bg-slate-100"
@@ -159,6 +152,7 @@
         </svg>
 
       </button>
+
     </nav>
 
     <!-- Mobile Menu -->
@@ -280,49 +274,56 @@
           <!-- Product Results -->
           <div
             v-else
-            class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            class="mt-4 max-h-[70vh] overflow-y-auto pr-2"
           >
 
-            <!-- Product Card -->
             <div
-              v-for="product in filteredProducts"
-              :key="product.id"
-              class="group cursor-pointer rounded-2xl border border-slate-200 bg-white/70 p-4 transition hover:-translate-y-1 hover:shadow-xl"
+              class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
             >
 
-              <!-- Product Image -->
-              <div class="overflow-hidden rounded-2xl bg-slate-100">
+              <!-- Product Card -->
+              <div
+                v-for="product in filteredProducts"
+                :key="product.id"
+                class="group rounded-2xl border border-slate-200 bg-white/70 p-4 transition hover:-translate-y-1 hover:shadow-xl"
+              >
 
-                <img
-                  :src="product.image"
-                  alt=""
-                  class="h-48 w-full object-contain transition duration-300 group-hover:scale-105"
-                >
+                <!-- Product Image -->
+                <div class="overflow-hidden rounded-2xl bg-slate-100">
 
-              </div>
+                  <img
+                    :src="product.image"
+                    alt=""
+                    class="h-48 w-full object-contain transition duration-300 group-hover:scale-105"
+                  >
 
-              <!-- Product Info -->
-              <div class="mt-4">
+                </div>
 
-                <h3 class="line-clamp-1 font-semibold text-slate-800">
-                  {{ product.title }}
-                </h3>
+                <!-- Product Info -->
+                <div class="mt-4">
 
-                <p class="mt-1 text-sm text-slate-500">
-                  {{ product.category }}
-                </p>
+                  <h3 class="line-clamp-1 font-semibold text-slate-800">
+                    {{ product.title }}
+                  </h3>
 
-                <div class="mt-3 flex items-center justify-between">
-
-                  <p class="text-lg font-bold text-indigo-600">
-                    ${{ product.price }}
+                  <p class="mt-1 text-sm text-slate-500">
+                    {{ product.category }}
                   </p>
 
-                  <button
-                    class="flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:scale-105 hover:bg-indigo-700"
-                  >
-                    Add to Cart
-                  </button>
+                  <div class="mt-3 flex items-center justify-between">
+
+                    <p class="text-lg font-bold text-indigo-600">
+                      ${{ product.price }}
+                    </p>
+
+                    <button
+                      @click="handleAddToCart(product)"
+                      class="flex items-center justify-center rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:scale-105 hover:bg-gray-700"
+                    >
+                      Add to Cart
+                    </button>
+
+                  </div>
 
                 </div>
 
@@ -362,7 +363,6 @@
         <button class="account-button text-red-500">
           Logout
         </button>
-
       </div>
 
       <div v-else>
@@ -373,21 +373,34 @@
         <button class="account-button">
           Register
         </button>
-
       </div>
 
     </div>
+
+    <!-- POPUP -->
+    <Teleport to="body">
+      <transition name="cart-popup">
+        <div
+          v-if="cartStore.showMessage"
+          class="fixed left-1/2 top-24 z-99999 w-fit max-w-[90%] -translate-x-1/2 rounded-2xl bg-green-500 px-5 py-3 text-center text-sm font-semibold text-white shadow-2xl"
+        >
+          {{ cartStore.message }}
+        </div>
+      </transition>
+    </Teleport>
 
   </header>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
 import logoUrl from '@/assets/images/logoShop.jpg'
 import { request } from '@/services/api'
 import { useCartStore } from '@/stores/cartStore'
 
 const cartStore = useCartStore()
+
 const isSearchOpen = ref(false)
 const isAccountOpen = ref(false)
 const isMenuOpen = ref(false)
@@ -404,7 +417,6 @@ const navItems = [
 ]
 
 const toggleMenu = () => {
-
   isMenuOpen.value = !isMenuOpen.value
 
   if (isMenuOpen.value) {
@@ -413,10 +425,8 @@ const toggleMenu = () => {
 }
 
 const toggleSearch = () => {
-
   isAccountOpen.value = false
   isMenuOpen.value = false
-
   isSearchOpen.value = !isSearchOpen.value
 }
 
@@ -424,6 +434,7 @@ const toggleAccount = () => {
   if (window.innerWidth < 1024) {
     isMenuOpen.value = false
   }
+
   isSearchOpen.value = false
   isAccountOpen.value = !isAccountOpen.value
 }
@@ -431,16 +442,30 @@ const toggleAccount = () => {
 const fetchProducts = async () => {
   try {
     loading.value = true
+
     const data = await request('/products')
+
     if (data) {
       products.value = data
     }
+
   } catch (error) {
     console.log(error)
+
   } finally {
     loading.value = false
-
   }
+}
+
+const handleAddToCart = (product) => {
+  cartStore.addItem(product)
+
+  cartStore.message = `${product.title} added to cart`
+  cartStore.showMessage = true
+
+  setTimeout(() => {
+    cartStore.showMessage = false
+  }, 2000)
 }
 
 onMounted(() => {
@@ -450,7 +475,7 @@ onMounted(() => {
 const filteredProducts = computed(() => {
 
   if (!search.value) {
-    return products.value.slice(0, 5)
+    return products.value.slice(0, 6)
   }
 
   return products.value.filter(product =>
@@ -540,16 +565,31 @@ const filteredProducts = computed(() => {
   background: rgb(241 245 249);
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
+.cart-popup-enter-active,
+.cart-popup-leave-active {
+  transition: all 0.35s ease;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.cart-popup-enter-from,
+.cart-popup-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translate(-50%, -20px);
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
 </style>
