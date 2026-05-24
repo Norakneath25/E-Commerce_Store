@@ -340,42 +340,177 @@
     </div>
 
     <!-- Account Dropdown -->
-    <div
-      v-if="isAccountOpen"
-      class="absolute right-4 top-20 z-50 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl lg:right-6 lg:top-24"
+<div
+  v-if="isAccountOpen"
+  class="fixed right-0 top-0 z-9999 h-screen w-full max-w-md overflow-y-auto bg-white shadow-2xl transition-all"
+>
+
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b border-slate-200 p-6">
+
+    <div>
+      <h2 class="text-2xl font-bold text-slate-900">
+        {{ isLoginMode ? 'Login' : 'Register' }}
+      </h2>
+
+      <p class="mt-1 text-sm text-slate-500">
+        Welcome to E-Commerce Store
+      </p>
+    </div>
+
+    <!-- Close -->
+    <button
+      @click="isAccountOpen = false"
+      class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-600 transition hover:bg-slate-200"
     >
+      ✕
+    </button>
 
-      <div class="border-b border-slate-100 p-4">
-        <h3 class="font-semibold text-slate-800">
-          My Account
-        </h3>
+  </div>
+
+  <!-- USER LOGGED -->
+  <div
+    v-if="authStore.isAuthenticated"
+    class="p-6"
+  >
+
+    <!-- Profile -->
+    <div class="flex flex-col items-center">
+
+      <div
+        class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-3xl font-bold text-indigo-600"
+      >
+        {{ authStore.user.name.charAt(0).toUpperCase() }}
       </div>
 
-      <div v-if="hasAccount">
-        <button class="account-button">
-          Profile
-        </button>
+      <h3 class="mt-4 text-xl font-bold text-slate-900">
+        {{ authStore.user.name }}
+      </h3>
 
-        <button class="account-button">
-          Orders
-        </button>
-
-        <button class="account-button text-red-500">
-          Logout
-        </button>
-      </div>
-
-      <div v-else>
-        <button class="account-button">
-          Login
-        </button>
-
-        <button class="account-button">
-          Register
-        </button>
-      </div>
+      <p class="mt-1 text-slate-500">
+        {{ authStore.user.email }}
+      </p>
 
     </div>
+
+    <!-- Menu -->
+    <div class="mt-8 space-y-3">
+
+      <RouterLink
+        to="/order"
+        @click="isAccountOpen = false"
+        class="flex items-center justify-between rounded-2xl border border-slate-200 px-5 py-4 font-semibold text-slate-700 transition hover:bg-slate-50"
+      >
+        My Orders
+
+        <span class="text-slate-400">
+          →
+        </span>
+      </RouterLink>
+
+      <button
+        @click="logout"
+        class="flex w-full items-center justify-between rounded-2xl border border-red-200 bg-red-50 px-5 py-4 font-semibold text-red-500 transition hover:bg-red-100"
+      >
+        Logout
+
+        <span>
+          →
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- LOGIN / REGISTER -->
+  <div
+    v-else
+    class="p-6"
+  >
+
+    <form
+      class="space-y-5"
+      @submit.prevent="submitAuth"
+    >
+
+      <!-- Name -->
+      <div v-if="!isLoginMode">
+
+        <label class="mb-2 block text-sm font-semibold text-slate-700">
+          Full Name
+        </label>
+
+        <input
+          v-model="form.name"
+          type="text"
+          placeholder="Enter your name"
+          class="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-indigo-500"
+        >
+
+      </div>
+
+      <!-- Email -->
+      <div>
+
+        <label class="mb-2 block text-sm font-semibold text-slate-700">
+          Email
+        </label>
+
+        <input
+          v-model="form.email"
+          type="email"
+          placeholder="Enter your email"
+          class="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-indigo-500"
+        >
+
+      </div>
+
+      <!-- Password -->
+      <div>
+
+        <label class="mb-2 block text-sm font-semibold text-slate-700">
+          Password
+        </label>
+
+        <input
+          v-model="form.password"
+          type="password"
+          placeholder="Enter your password"
+          class="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-indigo-500"
+        >
+
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="w-full rounded-2xl bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-700"
+      >
+        {{ isLoginMode ? 'Login' : 'Create Account' }}
+      </button>
+
+    </form>
+
+    <!-- Switch -->
+    <div class="mt-6 text-center">
+
+      <button
+        @click="isLoginMode = !isLoginMode"
+        class="text-sm font-semibold text-indigo-600"
+      >
+        {{
+          isLoginMode
+            ? "Don't have an account? Register"
+            : 'Already have an account? Login'
+        }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
     <!-- POPUP -->
     <Teleport to="body">
@@ -482,6 +617,56 @@ const filteredProducts = computed(() => {
     product.title.toLowerCase().includes(search.value.toLowerCase())
   )
 })
+
+
+import { useAuthStore } from '@/stores/authStore'
+
+const authStore = useAuthStore()
+
+const isLoginMode = ref(true)
+
+const form = ref({
+  name: '',
+  email: '',
+  password: ''
+})
+
+const submitAuth = () => {
+
+  if (isLoginMode.value) {
+
+    authStore.login({
+      user: {
+        name: form.value.name || 'User',
+        email: form.value.email
+      },
+      token: 'sample_token'
+    })
+
+  } else {
+
+    authStore.login({
+      user: {
+        name: form.value.name,
+        email: form.value.email
+      },
+      token: 'sample_token'
+    })
+  }
+
+  form.value = {
+    name: '',
+    email: '',
+    password: ''
+  }
+
+  isAccountOpen.value = false
+}
+
+const logout = () => {
+  authStore.logout()
+  isAccountOpen.value = false
+}
 </script>
 
 <style scoped>
