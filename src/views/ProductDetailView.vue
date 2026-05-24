@@ -1,14 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-100 py-10">
 
-    <!-- toast notification -->
-    <div
-      v-if="cartStore.showMessage"
-      class="fixed top-6 right-6 bg-black text-white px-6 py-3 rounded-xl shadow-lg z-50"
-    >
-      ✓ {{ cartStore.message }}
-    </div>
-
     <div class="container mx-auto px-4">
 
       <!-- back button -->
