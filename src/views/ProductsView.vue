@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mx-auto">
     <div class="flex gap-2 flex-wrap p-4">
       <button
         @click="productStore.fetchAllProducts()"

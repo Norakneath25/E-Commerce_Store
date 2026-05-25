@@ -1,11 +1,11 @@
 <script setup>
-import ProductsView from './ProductsView.vue';
-
-
+import Banner from "../components/Banner.vue";
+import ProductsView from "./ProductsView.vue";
 </script>
 
 <template>
   <div class="container mx-auto">
-    <ProductsView/>
+    <Banner />
+    <ProductsView />
   </div>
 </template>
